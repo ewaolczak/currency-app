@@ -47,6 +47,21 @@ const testCasesSameCurrency = [
   }
 ];
 
+const testCasesNegative = [
+  {
+    amount: '-100.00',
+    from: 'PLN',
+    to: 'USD',
+    result: 'Wrong value...'
+  },
+  {
+    amount: '-345.00',
+    from: 'USD',
+    to: 'PLN',
+    result: 'Wrong value...'
+  }
+];
+
 describe('Component ResultBox', () => {
   it('should render without crashing', () => {
     render(<ResultBox from='PLN' to='USD' amount={100} />);
@@ -104,6 +119,26 @@ describe('Component ResultBox', () => {
       expect(output).toHaveTextContent(
         `${testObj.currencyId}${testObj.amount} = ${testObj.result}`
       );
+    });
+    // unmount component
+    cleanup();
+  }
+
+  for (const testObj of testCasesNegative) {
+    it('should render proper info about conversion when value is negative', () => {
+      render(
+        <ResultBox
+          from={testObj.from}
+          to={testObj.to}
+          amount={parseInt(testObj.amount)}
+        />
+      );
+
+      // find div
+      const output = screen.getByTestId('output');
+
+      // check render value
+      expect(output).toHaveTextContent(testObj.result);
     });
     // unmount component
     cleanup();
